@@ -31,3 +31,7 @@ func (repo *Repo) InsertAndUpdate(ctx context.Context) error {
     })
 }
 ```
+
+## How it works?
+
+When you call `RunTx` it starts a new transaction and saves that object inside context. Calls to `Query`, `QueryRow` and `Exec` will check on the context and will either use the new transaction object or take a connection directly from the pool.
