@@ -20,25 +20,22 @@ func New(pool *pgxpool.Pool) *DB {
 func (db *DB) Query(ctx context.Context, query string, args ...any) (pgx.Rows, error) {
 	if tx, ok := txFromContext(ctx); ok {
 		return tx.Query(ctx, query, args...)
-	} else {
-		return db.pool.Query(ctx, query, args...)
 	}
+	return db.pool.Query(ctx, query, args...)
 }
 
 func (db *DB) QueryRow(ctx context.Context, query string, args ...any) pgx.Row {
 	if tx, ok := txFromContext(ctx); ok {
 		return tx.QueryRow(ctx, query, args...)
-	} else {
-		return db.pool.QueryRow(ctx, query, args...)
 	}
+	return db.pool.QueryRow(ctx, query, args...)
 }
 
 func (db *DB) Exec(ctx context.Context, query string, args ...any) (pgconn.CommandTag, error) {
 	if tx, ok := txFromContext(ctx); ok {
 		return tx.Exec(ctx, query, args...)
-	} else {
-		return db.pool.Exec(ctx, query, args...)
 	}
+	return db.pool.Exec(ctx, query, args...)
 }
 
 func (db *DB) RunTx(ctx context.Context, fn func(ctx context.Context) error) (err error) {
