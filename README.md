@@ -1,5 +1,7 @@
 # Golang Database Wrapper
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/nicolasparada/go-db.svg)](https://pkg.go.dev/github.com/nicolasparada/go-db)
+
 ```bash
 go get github.com/nicolasparada/go-db
 ```
