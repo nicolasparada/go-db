@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -40,21 +41,27 @@ func (db *DB) Exec(ctx context.Context, query string, args ...any) (pgconn.Comma
 	}
 }
 
-func (db *DB) RunTx(ctx context.Context, fn func(ctx context.Context) error) error {
+func (db *DB) RunTx(ctx context.Context, fn func(ctx context.Context) error) (err error) {
 	if _, ok := txFromContext(ctx); ok {
 		return fn(ctx)
 	}
 
-	tx, err := db.pool.Begin(ctx)
+	tx, errTx := db.pool.Begin(ctx)
 	if err != nil {
-		return err
+		return errTx
 	}
 
-	defer tx.Rollback(ctx)
+	defer func() {
+		errRollback := tx.Rollback(ctx)
+		if errRollback != nil && !errors.Is(err, pgx.ErrTxClosed) {
+			err = errRollback
+		}
+	}()
 
-	err = fn(contextWithTx(ctx, tx))
-	if err != nil {
-		return err
+	errFunc := fn(contextWithTx(ctx, tx))
+	if errFunc != nil {
+		_ = tx.Rollback(ctx)
+		return errFunc
 	}
 
 	return tx.Commit(ctx)
