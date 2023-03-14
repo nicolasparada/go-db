@@ -10,7 +10,7 @@ Simple Golang database wrapper over [github.com/jackc/pgx/v5](https://github.com
 Specifically designed to work with [CockroachDB](https://cockroachlabs.com).
 
 Instead of starting a transaction, commiting (or rolling back) each time,
-you simply pass a callback function. This allows for definig methods
+you simply pass a callback function. This allows for defining methods
 over a single database object and you can either run them standalone
 or inside a transaction.
 
