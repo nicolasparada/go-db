@@ -6,7 +6,8 @@
 go get github.com/nicolasparada/go-db
 ```
 
-Simple Golang database wrapper over [github.com/jackc/pgx/v5](https://github.com/jackc/pgx/v5) with better transactions API.
+Simple Golang database wrapper over [github.com/jackc/pgx/v5](https://github.com/jackc/pgx) with better transactions API.
+Specifically designed to work with [CockroachDB](https://cockroachlabs.com)
 
 Instead of starting a transaction, commiting (or rolling back) each time,
 you simply pass a callback function. This allows for definig methods

@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -43,23 +42,7 @@ func (db *DB) RunTx(ctx context.Context, fn func(ctx context.Context) error) (er
 		return fn(ctx)
 	}
 
-	tx, errTx := db.pool.Begin(ctx)
-	if err != nil {
-		return errTx
-	}
-
-	defer func() {
-		errRollback := tx.Rollback(ctx)
-		if errRollback != nil && !errors.Is(err, pgx.ErrTxClosed) {
-			err = errRollback
-		}
-	}()
-
-	errFunc := fn(contextWithTx(ctx, tx))
-	if errFunc != nil {
-		_ = tx.Rollback(ctx)
-		return errFunc
-	}
-
-	return tx.Commit(ctx)
+	return executeTx(ctx, db.pool, func(tx pgx.Tx) error {
+		return fn(contextWithTx(ctx, tx))
+	})
 }
