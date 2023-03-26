@@ -18,6 +18,10 @@ func IsError(err error, code string, cols ...string) bool {
 		return false
 	}
 
+	if len(cols) == 0 {
+		return true
+	}
+
 	if e.ColumnName != "" {
 		for _, col := range cols {
 			if e.ColumnName == col {
