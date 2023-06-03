@@ -29,8 +29,8 @@ func (repo *Repo) Update(ctx context.Context) error {
 
 func (repo *Repo) InsertAndUpdate(ctx context.Context) error {
     return repo.db.RunTx(ctx, func(ctx context.Context) error {
-        repo.Insert()
-        repo.Update()
+        repo.Insert(ctx)
+        repo.Update(ctx)
     })
 }
 ```
