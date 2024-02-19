@@ -3,7 +3,7 @@ module github.com/nicolasparada/go-db
 go 1.20
 
 require (
-	github.com/alecthomas/assert/v2 v2.5.0
+	github.com/alecthomas/assert/v2 v2.6.0
 	github.com/cockroachdb/cockroach-go/v2 v2.3.6
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.5.3
@@ -14,7 +14,7 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
-	github.com/alecthomas/repr v0.3.0 // indirect
+	github.com/alecthomas/repr v0.4.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/containerd/continuity v0.3.0 // indirect
 	github.com/docker/cli v23.0.1+incompatible // indirect
