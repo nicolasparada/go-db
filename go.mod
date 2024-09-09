@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/assert/v2 v2.10.0
 	github.com/cockroachdb/cockroach-go/v2 v2.3.8
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
-	github.com/jackc/pgx/v5 v5.5.5
+	github.com/jackc/pgx/v5 v5.7.0
 	github.com/ory/dockertest/v3 v3.10.0
 )
 
@@ -26,7 +26,7 @@ require (
 	github.com/hexops/gotextdiff v1.0.3 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/kr/text v0.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
