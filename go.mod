@@ -3,7 +3,7 @@ module github.com/nicolasparada/go-db
 go 1.20
 
 require (
-	github.com/alecthomas/assert/v2 v2.10.0
+	github.com/alecthomas/assert/v2 v2.11.0
 	github.com/cockroachdb/cockroach-go/v2 v2.3.8
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.5.5
