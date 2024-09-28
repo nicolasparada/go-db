@@ -8,9 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func executeTx(
-	ctx context.Context, pool *pgxpool.Pool, fn func(pgx.Tx) error,
-) error {
+func executeTx(ctx context.Context, pool *pgxpool.Pool, fn func(pgx.Tx) error) error {
 	tx, err := pool.Begin(ctx)
 	if err != nil {
 		return err

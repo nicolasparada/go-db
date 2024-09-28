@@ -1,10 +1,13 @@
 package db
 
 import (
+	"cmp"
+	"database/sql"
 	"errors"
 	"strings"
 
 	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -46,6 +49,13 @@ func IsError(err error, code string, cols ...string) bool {
 	}
 
 	return false
+}
+
+func IsNotFoundError(err error) bool {
+	return cmp.Or(
+		errors.Is(err, pgx.ErrNoRows),
+		errors.Is(err, sql.ErrNoRows),
+	)
 }
 
 func IsNotNullViolationError(err error, cols ...string) bool {
