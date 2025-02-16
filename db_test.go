@@ -78,7 +78,7 @@ func setupDB(cockroach *dockertest.Resource, retry func(op func() error) error) 
 }
 
 func TestDB_QueryRow(t *testing.T) {
-	ctx := context.Background()
+	ctx := t.Context()
 	t.Run("int", func(t *testing.T) {
 		var i int
 		err := testDB.QueryRow(ctx, "SELECT 1").Scan(&i)

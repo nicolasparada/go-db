@@ -24,7 +24,7 @@ type pgxTxAdapter struct {
 }
 
 // Exec implements crdb.Tx interface.
-func (a pgxTxAdapter) Exec(ctx context.Context, q string, args ...interface{}) error {
+func (a pgxTxAdapter) Exec(ctx context.Context, q string, args ...any) error {
 	_, err := a.Tx.Exec(ctx, q, args...)
 	return err
 }
