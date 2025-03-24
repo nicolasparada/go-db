@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/assert/v2 v2.11.0
 	github.com/cockroachdb/cockroach-go/v2 v2.4.0
 	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
-	github.com/jackc/pgx/v5 v5.7.2
+	github.com/jackc/pgx/v5 v5.7.3
 	github.com/ory/dockertest/v3 v3.11.0
 )
 
