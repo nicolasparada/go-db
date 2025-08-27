@@ -2,11 +2,13 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"os"
+	"reflect"
 	"testing"
 
-	"github.com/alecthomas/assert/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ory/dockertest/v3"
 )
@@ -82,15 +84,15 @@ func TestDB_QueryRow(t *testing.T) {
 	t.Run("int", func(t *testing.T) {
 		var i int
 		err := testDB.QueryRow(ctx, "SELECT 1").Scan(&i)
-		assert.NoError(t, err)
-		assert.Equal(t, 1, i)
+		assertNil(t, err)
+		assertEqual(t, i, 1)
 	})
 
 	t.Run("slice", func(t *testing.T) {
 		var slice []int
 		err := testDB.QueryRow(ctx, "SELECT ARRAY[1, 2, 3]").Scan(&slice)
-		assert.NoError(t, err)
-		assert.Equal(t, []int{1, 2, 3}, slice)
+		assertNil(t, err)
+		assertEqual(t, slice, []int{1, 2, 3})
 	})
 
 	t.Run("json", func(t *testing.T) {
@@ -100,31 +102,74 @@ func TestDB_QueryRow(t *testing.T) {
 
 		var data Data
 		err := testDB.QueryRow(ctx, `SELECT '{"a": 1}'::JSONB`).Scan(&data)
-		assert.NoError(t, err)
-		assert.Equal(t, Data{A: 1}, data)
+		assertNil(t, err)
+		assertEqual(t, data, Data{A: 1})
 	})
 
 	t.Run("tx", func(t *testing.T) {
 		_, err := testDB.Exec(ctx, "CREATE TABLE IF NOT EXISTS users (name VARCHAR PRIMARY KEY)")
-		assert.NoError(t, err)
+		assertNil(t, err)
 
 		err = testDB.RunTx(ctx, func(ctx context.Context) error {
 			_, err := testDB.Exec(ctx, "INSERT INTO users (name) VALUES ($1)", "alice")
-			assert.NoError(t, err)
+			assertNil(t, err)
 
 			_, err = testDB.Exec(ctx, "UPDATE users SET name = $1 WHERE name = $2", "bob", "alice")
-			assert.NoError(t, err)
+			assertNil(t, err)
 
 			var name string
 			err = testDB.QueryRow(ctx, "SELECT name FROM users WHERE name = $1", "alice").Scan(&name)
-			assert.EqualError(t, err, "no rows in result set")
+			assertErrorIs(t, err, sql.ErrNoRows)
 
 			err = testDB.QueryRow(ctx, "SELECT name FROM users WHERE name = $1", "bob").Scan(&name)
-			assert.NoError(t, err)
-			assert.Equal(t, "bob", name)
+			assertNil(t, err)
+			assertEqual(t, name, "bob")
 
 			return nil
 		})
-		assert.NoError(t, err)
+		assertNil(t, err)
 	})
+}
+
+func assertEqual[T any](t *testing.T, got, want T) {
+	t.Helper()
+	if !isEqual(got, want) {
+		t.Errorf("got: %v; want: %v", got, want)
+	}
+}
+
+func assertNil(t *testing.T, got any) {
+	t.Helper()
+	if !isNil(got) {
+		t.Errorf("got: %v; want: nil", got)
+	}
+}
+
+func assertErrorIs(t *testing.T, got, want error) {
+	t.Helper()
+	if !errors.Is(got, want) {
+		t.Errorf("got: %v; want: %v", got, want)
+	}
+}
+
+func isEqual[T any](got, want T) bool {
+	if isNil(got) && isNil(want) {
+		return true
+	}
+	if equalable, ok := any(got).(interface{ Equal(T) bool }); ok {
+		return equalable.Equal(want)
+	}
+	return reflect.DeepEqual(got, want)
+}
+
+func isNil(v any) bool {
+	if v == nil {
+		return true
+	}
+	rv := reflect.ValueOf(v)
+	switch rv.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Pointer, reflect.Slice:
+		return rv.IsNil()
+	}
+	return false
 }
