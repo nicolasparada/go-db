@@ -3,7 +3,7 @@ module github.com/nicolasparada/go-db
 go 1.25.0
 
 require (
-	github.com/cockroachdb/cockroach-go/v2 v2.4.1
+	github.com/cockroachdb/cockroach-go/v2 v2.4.2
 	github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/ory/dockertest/v3 v3.12.0
